@@ -13,7 +13,7 @@ node {
 
   stage('Run tests') {
       //sh("nvidia-docker run ${imageTag} python tools/tf_vers.py")
-      sh(echo "Here should be some tests..")
+      echo "Here should be some tests.."
   }
 
   stage('Push image to registry') {
