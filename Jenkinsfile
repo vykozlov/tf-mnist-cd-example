@@ -1,7 +1,7 @@
 node {
   def dockerhubuser = 'vykozlov'
   def appName = 'tf-mnist-cd'
-  def imageTag = "${project}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+  def imageTag = "${dockerhubuser}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
 
   checkout scm
 
