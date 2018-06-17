@@ -20,8 +20,9 @@ node {
       //sh("docker push ${imageTag}")
       withCredentials([usernamePassword(credentialsId: 'dockerhub-vykozlov-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
           sh '''
+            echo ${imageTag}
             docker login -u ${USERNAME} -p ${PASSWORD}
-            docker push ${imageTag}
+            docker push ${imageTag} 
             '''
         }
   }
