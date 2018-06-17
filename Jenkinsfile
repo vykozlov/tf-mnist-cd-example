@@ -32,8 +32,8 @@ node {
         case "master":
             // Change deployed image in canary to the one we just built
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0#${imageTag}#' ./k8s/production/*.yaml")
-            sh("kubectl --namespace=production apply -f k8s/services/tf-mnist-cd-svc.yaml")
-            sh("kubectl --namespace=production apply -f k8s/production/")
+            sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=production apply -f k8s/services/tf-mnist-cd-svc.yaml")
+            sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=production apply -f k8s/production/")
             break
 
         // Roll out a dev environment
