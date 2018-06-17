@@ -17,7 +17,7 @@ node {
   }
 
   stage('Push image to registry') {
-      sh("nvidia-docker -- push ${imageTag}")
+      sh("docker push ${imageTag}")
   }
 
   stage('Deploy Application') {
