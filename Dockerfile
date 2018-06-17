@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:1.5.0-gpu
+FROM tensorflow/tensorflow:1.6.0-gpu
 
 LABEL maintainer="Valentin Kozlov <valentin.kozlov@kit.edu>"
 # Dockerfile based on the one for Tensorflow from Tensorflow:
