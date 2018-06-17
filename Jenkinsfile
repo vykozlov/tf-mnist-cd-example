@@ -25,7 +25,7 @@ node {
         sh """
           docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
           docker push ${imageTag}
-        """
+          """
         }
   }
 
