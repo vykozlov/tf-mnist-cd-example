@@ -8,15 +8,15 @@ node {
   }
 
   stage('Build image') {
-      //sh("nvidia-docker build -t ${imageTag} .")
+      sh("nvidia-docker build -t ${imageTag} .")
   }
 
   stage('Run tests') {
-      //sh("nvidia-docker run ${imageTag} python tools/tf_vers.py")
+      sh("nvidia-docker run ${imageTag} python tools/tf_vers.py")
   }
 
   stage('Push image to registry') {
-      //sh("docker -- push ${imageTag}")
+      sh("docker -- push ${imageTag}")
   }
 
   stage('Deploy Application') {

@@ -49,6 +49,8 @@ spec:
         volumeMounts:
         - mountPath: /var/jenkins_home
           name: jenkins-home
+        - mountPath: /var/run/docker.sock
+          name: docker-sock
         resources:
           limits:
             cpu: 500m
@@ -61,6 +63,9 @@ spec:
         hostPath:
           path: /home/eo9869/jenkins_home
           type: Directory
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
       nodeSelector:
         service: jenkins
 # [END jenkins_deployment]
