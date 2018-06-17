@@ -8,15 +8,15 @@ node {
   }
 
   stage('Build image') {
-      sh("docker build -t ${imageTag} .")
+      sh("/usr/bin/docker build -t ${imageTag} .")
   }
 
   stage('Run tests') {
-      sh("docker run ${imageTag} python tools/tf_vers.py")
+      sh("/usr/bin/docker run ${imageTag} python tools/tf_vers.py")
   }
 
   stage('Push image to registry') {
-      sh("docker -- push ${imageTag}")
+      sh("/usr/bin/docker -- push ${imageTag}")
   }
 
   stage('Deploy Application') {
