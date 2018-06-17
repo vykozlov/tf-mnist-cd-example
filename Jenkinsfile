@@ -18,12 +18,13 @@ node {
 
   stage('Push image to registry') {
       //sh("docker push ${imageTag}")
+      echo ${imageTag}
       withCredentials([usernamePassword(credentialsId: 'dockerhub-vykozlov-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-          sh '''
+          sh """
             echo ${imageTag}
             docker login -u ${USERNAME} -p ${PASSWORD}
             docker push ${imageTag} 
-            '''
+            """
         }
   }
 
