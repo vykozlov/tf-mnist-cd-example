@@ -17,16 +17,16 @@ node {
   }
 
   stage('Push image to registry') {
-      //sh("docker push ${imageTag}")
-      withCredentials([[$class: 'UsernamePasswordMultiBinding',
-        credentialsId: 'dockerhub-vykozlov-credentials',
-        usernameVariable: 'DOCKER_HUB_USER',
-        passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
-        sh """
-          docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
-          docker push ${imageTag}
-          """
-        }
+      sh("docker push ${imageTag}")
+      //withCredentials([[$class: 'UsernamePasswordMultiBinding',
+      //  credentialsId: 'dockerhub-vykozlov-credentials',
+      //  usernameVariable: 'DOCKER_HUB_USER',
+      //  passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+      //  sh """
+      //    docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
+      //    docker push ${imageTag}
+      //    """
+      //  }
   }
 
   stage('Deploy Application') {
