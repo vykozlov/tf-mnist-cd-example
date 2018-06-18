@@ -39,11 +39,13 @@ node {
         // Roll out a dev environment
         default:
             // Create namespace if it doesn't exist
-            sh("kubectl get ns ${env.BRANCH_NAME} || kubectl create ns ${env.BRANCH_NAME}")
+            //sh("kubectl get ns ${env.BRANCH_NAME} || kubectl create ns ${env.BRANCH_NAME}")
             // Don't use public load balancing for development branches
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/dev/*.yaml")
-            sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=${env.BRANCH_NAME} apply -f k8s/services/tf-mnist-cd-dev-svc.yaml")
-            sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=${env.BRANCH_NAME} apply -f k8s/dev/")
+            sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=dev apply -f k8s/services/tf-mnist-cd-dev-svc.yaml")
+            sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=dev apply -f k8s/dev/")
+            //sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=${env.BRANCH_NAME} apply -f k8s/services/tf-mnist-cd-dev-svc.yaml")
+            //sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=${env.BRANCH_NAME} apply -f k8s/dev/")
             //echo 'To access your environment run `kubectl proxy`'
             //echo "Then access your service via http://localhost:8001/api/v1/proxy/namespaces/${env.BRANCH_NAME}/services/${feSvcName}:80/"
       }
