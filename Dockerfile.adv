@@ -88,5 +88,8 @@ ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 # Copy the current directory contents into the container at /home
 ADD . /home
 
+# Set the working directory to /home/apps
+WORKDIR /home/apps
+
 # Run mnist_deep.py when the container launches. BETTER TO AVOID THIS!
 #CMD ["python", "mnist_deep.py"]
