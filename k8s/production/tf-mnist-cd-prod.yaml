@@ -21,7 +21,7 @@ spec:
         - name: PASSWORD
           valueFrom: 
             secretKeyRef:
-            - name: jupyter-pass
+              name: jupyter-pass
               key: jpassword
         volumeMounts:
         - mountPath: /tmp/mnist-data
