@@ -1,11 +1,3 @@
-def getJupyterPass() {
-    def pass
-    withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-      pass = ${PASSWORD}
-    }
-    return pass
-}
-  
 node {
   def dockerhubuser = 'vykozlov'
   def appName = 'tf-mnist-cd'
@@ -72,3 +64,12 @@ node {
       }
   }
 }
+
+def getJupyterPass() {
+    def pass
+    withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+      pass = ${PASSWORD}
+    }
+    return pass
+}
+  
