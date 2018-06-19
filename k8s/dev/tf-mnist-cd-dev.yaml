@@ -16,8 +16,16 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8888
+        volumeMounts:
+        - mountPath: /tmp/mnist-data
+          name: mnist-data        
         resources:
           limits:
             nvidia.com/gpu: 1 # requesting N GPUs
         #command: ["python","mnist_deep.py","--mnist_steps=5000"]
         command: ["./run_jupyter.sh", "--allow-root"]
+      volumes:
+      - name: mnist-data
+        hostPath:
+          path: /home/eo9869/datasets/mnist-data
+          type: Directory
