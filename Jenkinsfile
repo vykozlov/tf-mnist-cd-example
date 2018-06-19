@@ -39,7 +39,8 @@ node {
                 '''
             }
             sh("cat ${jpassfile}")
-            sh("kubectl create secret generic jupyter-pass --from-file=${jpassfile} --namespace=production --dry-run -o json > ${jpassfile}.yaml")
+            sh("kubectl --kubeconfig=${k8sConfigMaster} create secret generic jupyter-pass --from-file=${jpassfile} --namespace=production --dry-run -o json >${jpassfile}.yaml")
+            echo "ok - 1"
             sh("kubectl --kubeconfig=${k8sConfigMaster} apply -f ${jpassfile}.yaml")
             sh("rm ${jpassfile} ${jpassfile}.yaml")
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/production/*.yaml")
