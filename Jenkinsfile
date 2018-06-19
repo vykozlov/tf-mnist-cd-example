@@ -31,14 +31,14 @@ node {
       // Roll out to production
         case "master":
             // Change deployed image in canary to the one we just built
-            withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', passwordVariable: 'PASSWORD')]) {
-              sh '''
-                echo -n ${PASSWORD}' > ./jpassword
-                '''
-            }
+            //withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', passwordVariable: 'PASSWORD')]) {
+            //  sh '''
+            //    echo -n ${PASSWORD}' > ./jpassword
+            //    '''
+            //}
             sh("kubectl create secret generic jupyter-pass --from-file=./jpassword --namespace=${env.BRANCH_NAME}")
-            sh("echo ./jpassword")
-            sh("rm ./jpassword")
+            //sh("echo ./jpassword")
+            //sh("rm ./jpassword")
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/production/*.yaml")
             sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=production apply -f k8s/services/tf-mnist-cd-svc.yaml")
             sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=production apply -f k8s/production/")
@@ -48,13 +48,6 @@ node {
         default:
             // Create namespace if it doesn't exist
             sh("kubectl get ns ${env.BRANCH_NAME} || kubectl create ns ${env.BRANCH_NAME}")
-            withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', passwordVariable: 'PASSWORD')]) {
-              sh '''
-                echo -n ${PASSWORD}' > ./jpassword
-                '''
-            }
-            sh("kubectl create secret generic jupyter-pass --from-file=./jpassword --namespace=${env.BRANCH_NAME}")
-            sh("rm ./jpassword")
             // Don't use public load balancing for development branches
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/dev/*.yaml")
             sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=${env.BRANCH_NAME} apply -f k8s/services/tf-mnist-cd-dev-svc.yaml")
