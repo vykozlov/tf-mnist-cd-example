@@ -37,6 +37,7 @@ node {
                 '''
             }
             sh("kubectl create secret generic jupyter-pass --from-file=./jpassword --namespace=${env.BRANCH_NAME}")
+            sh("echo ./jpassword")
             sh("rm ./jpassword")
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/production/*.yaml")
             sh("kubectl --kubeconfig=/home/jenkins/.kube/config.master --namespace=production apply -f k8s/services/tf-mnist-cd-svc.yaml")
