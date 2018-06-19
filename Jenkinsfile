@@ -3,6 +3,7 @@ node {
   def appName = 'tf-mnist-cd'
   def imageTag = "${dockerhubuser}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}-gpu"
   def k8sConfigMaster = "/home/jenkins/.kube/config.master"
+  def jpassfile = "./jpassword"
 
   stage ('Clone repository') {
       checkout scm
@@ -34,11 +35,12 @@ node {
             // Change deployed image in canary to the one we just built
             withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
               sh '''
-                echo -n ${PASSWORD} > ./jpassword
+                echo -n ${PASSWORD} > ${jpassfile}
                 '''
             }
-            sh("kubectl create secret generic jupyter-pass --from-file=./jpassword --namespace=production --dry-run -o json | kubectl --kubeconfig=${k8sConfigMaster} apply -f -")
-            sh("rm ./jpassword")
+            sh("kubectl create secret generic jupyter-pass --from-file=${jpassfile} --namespace=production --dry-run -o json > ${jpassfile}.yaml")
+            sh("kubectl --kubeconfig=${k8sConfigMaster} apply -f ${jpassfile}.yaml")
+            sh("rm ${jpassfile} ${jpassfile}.yaml")
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/production/*.yaml")
             sh("kubectl --kubeconfig=${k8sConfigMaster} --namespace=production apply -f k8s/services/tf-mnist-cd-svc.yaml")
             sh("kubectl --kubeconfig=${k8sConfigMaster} --namespace=production apply -f k8s/production/")
