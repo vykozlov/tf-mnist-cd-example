@@ -1,18 +1,17 @@
+def getJupyterPass() {
+    def pass
+    withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+      pass = ${PASSWORD}
+    }
+    return pass
+}
+  
 node {
   def dockerhubuser = 'vykozlov'
   def appName = 'tf-mnist-cd'
   def imageTag = "${dockerhubuser}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}-gpu"
   def k8sConfigMaster = "/home/jenkins/.kube/config.master"
-  def jpassfile = "./jpassword"
-  
-  def getJupyterPass() {
-      def pass
-      withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        pass = ${PASSWORD}
-      }
-      return pass
-  }
-  
+  def jpassfile = "./jpassword"  
   def jpass = getJupyterPass()
 
   stage ('Clone repository') {
