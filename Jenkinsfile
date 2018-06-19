@@ -37,7 +37,7 @@ node {
                 echo -n ${PASSWORD} > ./jpassword
                 '''
             }
-            sh("kubectl --kubeconfig=${k8sConfigMaster} create secret generic jupyter-pass --from-file=./jpassword --namespace=production --dry-run -o json | kubectl apply -f -")
+            sh("kubectl create secret generic jupyter-pass --from-file=./jpassword --namespace=production --dry-run -o json | kubectl --kubeconfig=${k8sConfigMaster} apply -f -")
             sh("rm ./jpassword")
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/production/*.yaml")
             sh("kubectl --kubeconfig=${k8sConfigMaster} --namespace=production apply -f k8s/services/tf-mnist-cd-svc.yaml")
@@ -53,7 +53,7 @@ node {
                 echo -n ${PASSWORD} > ./jpassword
                 '''
             }
-            sh("kubectl --kubeconfig=${k8sConfigMaster} create secret generic jupyter-pass --from-file=./jpassword --namespace=${env.BRANCH_NAME} --dry-run -o json | kubectl apply -f -")
+            sh("kubectl create secret generic jupyter-pass --from-file=./jpassword --namespace=${env.BRANCH_NAME} --dry-run -o json | kubectl --kubeconfig=${k8sConfigMaster} apply -f -")
             sh("rm ./jpassword")            
             // Don't use public load balancing for development branches
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/dev/*.yaml")
