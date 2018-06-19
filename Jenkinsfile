@@ -34,7 +34,7 @@ node {
         case "master":
             // Change deployed image in canary to the one we just built
             def jpass
-            withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            this.withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
               jpass = ${PASSWORD}
             }            
             sh("echo -n ${jpass} > ${jpassfile}")
