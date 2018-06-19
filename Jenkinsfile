@@ -4,6 +4,16 @@ node {
   def imageTag = "${dockerhubuser}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}-gpu"
   def k8sConfigMaster = "/home/jenkins/.kube/config.master"
   def jpassfile = "./jpassword"
+  
+  def getJupyterPass() {
+      def pass
+      withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        pass = ${PASSWORD}
+      }
+      return pass
+  }
+  
+  def jpass = getJupyterPass()
 
   stage ('Clone repository') {
       checkout scm
@@ -33,11 +43,8 @@ node {
       // Roll out to production
         case "master":
             // Change deployed image in canary to the one we just built
-            withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-              sh '''
-                echo -n ${PASSWORD} > ${jpassfile}
-                '''
-            }
+            sh("echo ${jpass} > ${jpassfile}")
+            sh("cat ${jpassfile}")
             sh("kubectl create secret generic jupyter-pass --from-file=${jpassfile} --namespace=production --dry-run -o json > ${jpassfile}.yaml")
             sh("kubectl --kubeconfig=${k8sConfigMaster} apply -f ${jpassfile}.yaml")
             sh("rm ${jpassfile} ${jpassfile}.yaml")
