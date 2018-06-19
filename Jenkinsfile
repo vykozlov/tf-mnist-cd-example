@@ -33,11 +33,11 @@ node {
       // Roll out to production
         case "master":
             // Change deployed image in canary to the one we just built
-            def jpass
-            this.withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-              jpass = ${PASSWORD}
-            }            
-            sh("echo -n ${jpass} > ${jpassfile}")
+            withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+              sh '''
+                echo -n ${PASSWORD} > ./jpassword
+                '''
+            }
             sh("cat ${jpassfile}")
             sh("kubectl create secret generic jupyter-pass --from-file=${jpassfile} --namespace=production --dry-run -o json > ${jpassfile}.yaml")
             sh("kubectl --kubeconfig=${k8sConfigMaster} apply -f ${jpassfile}.yaml")
