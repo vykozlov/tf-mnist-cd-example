@@ -24,7 +24,9 @@ spec:
               key: jpassword        
         volumeMounts:
         - mountPath: /tmp/mnist-data
-          name: mnist-data        
+          name: mnist-data
+        - mountPath: /home/src
+          name: src-dir
         resources:
           limits:
             nvidia.com/gpu: 1 # requesting N GPUs
@@ -34,4 +36,8 @@ spec:
       - name: mnist-data
         hostPath:
           path: /home/eo9869/datasets/mnist-data
+          type: Directory
+      - name: src-dir
+        hostPath:
+          path: /home/eo9869/workspace/src
           type: Directory
