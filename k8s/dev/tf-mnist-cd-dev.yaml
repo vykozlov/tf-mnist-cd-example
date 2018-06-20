@@ -25,7 +25,7 @@ spec:
         volumeMounts:
         - mountPath: /tmp/mnist-data
           name: mnist-data
-        - mountPath: /home/src
+        - mountPath: /home/apps/src
           name: src-dir
         resources:
           limits:
