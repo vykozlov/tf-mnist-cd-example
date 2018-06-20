@@ -50,7 +50,7 @@ node {
         // Roll out a dev environment
         default:
             // Create namespace if it doesn't exist
-            sh("kubectl get ns ${env.BRANCH_NAME} || kubectl create ns ${env.BRANCH_NAME}")
+            sh("kubectl --kubeconfig=${k8sConfigMaster} get ns ${env.BRANCH_NAME} || kubectl --kubeconfig=${k8sConfigMaster} create ns ${env.BRANCH_NAME}")
             withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
               sh '''
                 echo -n ${PASSWORD} > ./jpassword
