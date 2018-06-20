@@ -16,6 +16,12 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8888
+        env:
+        - name: PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: jupyter-pass
+              key: jpassword        
         volumeMounts:
         - mountPath: /tmp/mnist-data
           name: mnist-data        
