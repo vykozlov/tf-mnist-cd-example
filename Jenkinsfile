@@ -36,7 +36,7 @@ node {
             // Change deployed image in canary to the one we just built
             withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
               sh '''
-                echo -n ${PASSWORD} > ./jpassword
+                echo -n ${PASSWORD} > ./jpassword  //how to pass parameters here??
                 '''
             }
             sh("kubectl --kubeconfig=${k8sConfigMaster} create secret generic ${jname} --from-file=${jpassfile} --namespace=production --dry-run -o json >${jpassfile}.yaml")
@@ -50,7 +50,7 @@ node {
         // Roll out a dev environment
         default:
             // Create namespace if it doesn't exist
-            sh("kubectl get ns ${env.BRANCH_NAME} || kubectl create ns ${env.BRANCH_NAME}")
+            sh("kubectl --kubeconfig=${k8sConfigMaster} get ns ${env.BRANCH_NAME} || kubectl --kubeconfig=${k8sConfigMaster} create ns ${env.BRANCH_NAME}")
             withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
               sh '''
                 echo -n ${PASSWORD} > ./jpassword
