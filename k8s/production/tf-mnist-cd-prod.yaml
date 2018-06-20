@@ -16,7 +16,6 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8888
-
         env:
         - name: PASSWORD
           valueFrom: 
