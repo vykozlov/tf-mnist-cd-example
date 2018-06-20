@@ -3,6 +3,7 @@ node {
   def appName = 'tf-mnist-cd'
   def imageTag = "${dockerhubuser}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}-gpu"
   def k8sConfigMaster = "/home/jenkins/.kube/config.master"
+  def jname = "jupyter-pass"
   def jpassfile = "./jpassword"  
 
   stage ('Clone repository') {
@@ -38,9 +39,7 @@ node {
                 echo -n ${PASSWORD} > ./jpassword
                 '''
             }
-            sh("cat ${jpassfile}")
-            sh("kubectl --kubeconfig=${k8sConfigMaster} create secret generic jupyter-pass --from-file=${jpassfile} --namespace=production --dry-run -o json >${jpassfile}.yaml")
-            echo "ok - 1"
+            sh("kubectl --kubeconfig=${k8sConfigMaster} create secret generic ${jname} --from-file=${jpassfile} --namespace=production --dry-run -o json >${jpassfile}.yaml")
             sh("kubectl --kubeconfig=${k8sConfigMaster} apply -f ${jpassfile}.yaml")
             sh("rm ${jpassfile} ${jpassfile}.yaml")
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/production/*.yaml")
@@ -57,8 +56,9 @@ node {
                 echo -n ${PASSWORD} > ./jpassword
                 '''
             }
-            sh("kubectl create secret generic jupyter-pass --from-file=./jpassword --namespace=${env.BRANCH_NAME} --dry-run -o json | kubectl --kubeconfig=${k8sConfigMaster} apply -f -")
-            sh("rm ./jpassword")            
+            sh("kubectl --kubeconfig=${k8sConfigMaster} create secret generic ${jname} --from-file=${jpassfile} --namespace=${env.BRANCH_NAME} --dry-run -o json >${jpassfile}.yaml")
+            sh("kubectl --kubeconfig=${k8sConfigMaster} apply -f ${jpassfile}.yaml")
+            sh("rm ${jpassfile} ${jpassfile}.yaml")       
             // Don't use public load balancing for development branches
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/dev/*.yaml")
             sh("kubectl --kubeconfig=${k8sConfigMaster} --namespace=${env.BRANCH_NAME} apply -f k8s/services/tf-mnist-cd-dev-svc.yaml")
