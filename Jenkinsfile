@@ -35,8 +35,9 @@ node {
         case "master":
             // Change deployed image in canary to the one we just built
             withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+              //how to pass parameters here??
               sh '''
-                echo -n ${PASSWORD} > ./jpassword  //how to pass parameters here??
+                echo -n ${PASSWORD} > ./jpassword
                 '''
             }
             sh("kubectl --kubeconfig=${k8sConfigMaster} create secret generic ${jname} --from-file=${jpassfile} --namespace=production --dry-run -o json >${jpassfile}.yaml")
