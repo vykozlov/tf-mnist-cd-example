@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: tf-mnist-cd
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tf-mnist-cd
+        env: production
+    spec:
+      containers:
+      - name: tf-mnist-cd
+        image: vykozlov/tf-mnist-cd:1.5.0-gpu
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8888
+        env:
+        - name: PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: jupyter-pass
+              key: jpassword
+        volumeMounts:
+        - mountPath: /tmp/mnist-data
+          name: mnist-data
+        resources:
+          limits:
+            nvidia.com/gpu: 1 # requesting N GPUs
+        #command: ["python","mnist_deep.py","--mnist_steps=5000"]
+        command: ["./run_jupyter.sh", "--allow-root"]
+      volumes:
+      - name: mnist-data
+        hostPath:
+          path: /home/eo9869/datasets/mnist-data
+          type: Directory
