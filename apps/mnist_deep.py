@@ -189,7 +189,8 @@ def main(_):
                 dtcheck = tcheck - tcheck_prev
                 nbatches = check_step if (i - num_steps_burn_in) > 0 else 0
                 t1batch = dtcheck/float(nbatches) if nbatches > 0 else 0
-                print("step {0:6d}, training accuracy {1:5.3f} ({2:5d} batches trained in {3:6.4f} s, i.e. {4:9.07f} s/batch)"
+                print("step {0:6d}, training accuracy {1:5.3f}"\
+                      "({2:5d} batches trained in {3:6.4f} s, i.e. {4:9.07f} s/batch)"
                       .format(i - num_steps_burn_in, train_accuracy, nbatches, dtcheck, t1batch))
                 tcheck_prev = time.time()
                 check_duration += (time.time() - tcheck)
@@ -262,9 +263,11 @@ if __name__ == '__main__':
     parser.add_argument("--mnist_steps", type=int, default=-1,
                         help="Number of steps to train")
     parser.add_argument("--with_profiling", nargs='?', const=True, type=bool, default=False,
-                        help="(experimental) Enable profiling. If --mnist_steps is not specified, only 2 epochs are processed!")
+                        help="(experimental) Enable profiling. "\
+                             "If --mnist_steps is not specified, only 2 epochs are processed!")
     parser.add_argument('--csv_file', type=str,
                         default='',
-                        help='File (.csv) to output script results. If no file is passed in, csv file will not be created.')
+                        help="File (.csv) to output script results. "\
+                             "If no file is passed in, csv file will not be created.")
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
