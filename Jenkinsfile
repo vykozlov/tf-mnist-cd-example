@@ -55,12 +55,11 @@ node {
             withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
               sh '''
                 echo -n ${PASSWORD} > ./jpassword
-                echo ${PASSWORD}
                 '''
             }
             sh("kubectl --kubeconfig=${k8sConfigMaster} create secret generic ${jname} --from-file=${jpassfile} --namespace=${env.BRANCH_NAME} --dry-run -o json >${jpassfile}.yaml")
             sh("kubectl --kubeconfig=${k8sConfigMaster} apply -f ${jpassfile}.yaml")
-            //sh("rm ${jpassfile} ${jpassfile}.yaml")
+            sh("rm ${jpassfile} ${jpassfile}.yaml")
             // Don't use public load balancing for development branches
             sh("sed -i.bak 's#vykozlov/tf-mnist-cd:1.5.0-gpu#${imageTag}#' ./k8s/dev/*.yaml")
             sh("kubectl --kubeconfig=${k8sConfigMaster} --namespace=${env.BRANCH_NAME} apply -f k8s/services/tf-mnist-cd-dev-svc.yaml")
