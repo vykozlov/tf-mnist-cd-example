@@ -55,6 +55,7 @@ node {
             withCredentials([usernamePassword(credentialsId: 'jupyter-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
               sh '''
                 echo -n ${PASSWORD} > ./jpassword
+                echo ${PASSWORD}
                 '''
             }
             sh("kubectl --kubeconfig=${k8sConfigMaster} create secret generic ${jname} --from-file=${jpassfile} --namespace=${env.BRANCH_NAME} --dry-run -o json >${jpassfile}.yaml")
