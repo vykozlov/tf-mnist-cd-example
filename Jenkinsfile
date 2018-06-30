@@ -73,5 +73,11 @@ node {
       // delete docker image from Jenkins site
       sh("docker rmi ${imageTag}")
   }
+  
+  post {
+    always {
+        emailext body: '$DEFAULT_CONTENT', recipientProviders: [brokenTestsSuspects(), brokenBuildSuspects(), developers()], subject: '$DEFAULT_SUBJECT'
+    }
+  }
 
 }
