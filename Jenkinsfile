@@ -96,7 +96,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
       <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>"""
 
     emailext (
-        //subject: subject,
+        subject: subject,
         body: details,
         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
     )
