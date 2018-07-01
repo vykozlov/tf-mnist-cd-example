@@ -1,7 +1,8 @@
 node {
   def dockerhubuser = 'vykozlov'
   def appName = 'tf-mnist-cd'
-  def imageTag = "${dockerhubuser}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}-gpu"
+  def mainVer = "1.0"
+  def imageTag = "${dockerhubuser}/${appName}:${env.BRANCH_NAME}.${mainVer}.${env.BUILD_NUMBER}-gpu"
   def k8sConfigMaster = "/home/jenkins/.kube/config.master"
   def jname = "jupyter-pass"
   def jpassfile = "./jpassword"  
@@ -95,7 +96,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
       <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>"""
 
     emailext (
-        subject: subject,
+        //subject: subject,
         body: details,
         recipientProviders: [[$class: 'DevelopersRecipientProvider']]
     )
