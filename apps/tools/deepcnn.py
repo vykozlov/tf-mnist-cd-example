@@ -63,3 +63,4 @@ def deepcnn(x):
 
     y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
     return y_conv, keep_prob
+    

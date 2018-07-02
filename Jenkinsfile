@@ -15,16 +15,10 @@ node {
 
       stage('Build test image and run tests') {
           def imageTagTest = "${imageTagBase}-tests"
-          def tmpDirTest = "/tmp/${imageTagTest}"
-          tmpDirTest = tmpDirTest.replaceAll(":","-")
-          //sh("mkdir ${tmpDirTest}")
           docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
-          docker.image("${imageTagTest}").inside("-u 0"){
-              sh 'cd apps && ln -s tests/run_pylint.sh run_pylint.sh'
-              sh 'apps/run_pylint.sh >pylint.log || exit 0'
+          sh("docker run ${imageTagTest} ./run_pylint.sh >pylint.log || exit 0'
               //echo "running container"
-              sh 'cat pylint.log'
-          }
+          sh 'cat pylint.log'
           
           //warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
           echo "Here should be more tests for ${imageTagTest}"

@@ -16,3 +16,9 @@ RUN apt-get update && \
     python -m ipykernel.kernelspec && \
     rm -rf /root/.cache/pip/* && \
     rm -rf /tmp/*
+
+WORKDIR /home/apps
+COPY apps/tests/run_pylint.sh /home/apps/
+
+# Copy the current directory contents into the container at /home
+ADD . /home
