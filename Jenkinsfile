@@ -88,17 +88,34 @@ node {
 def notifyBuild(String buildStatus = 'STARTED') {
     // build status of null means successful
     buildStatus =  buildStatus ?: 'SUCCESSFUL'
- 
+
+    // E.g. 'started by user', 'triggered by scm change'
+    def causes = currentBuild.rawBuild.getCauses()
+    def cause = null
+    if (!causes.isEmpty()) {
+        cause = causes[0].getShortDescription()
+    }
+    // Ensure we don't keep a list of causes
+    causes = null
+  
     // One can re-define default values
     def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
-    def details = """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+    def details = """<p>STARTED: Job '${env.PROJECT_NAME} - build [${env.BUILD_NUMBER}]' on $env.NODE_NAME.</p>
+      <p>Build trigger: ${cause}</p>
+      <p>TERMINATED with: ${buildStatus}
       <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>"""
 
+    String log = currentBuild.rawBuild.getLog(40).join('\n')
+    details = details + """
+    <h2>Last lines of output</h2>
+    <pre>$log</pre>
+    """  
+  
     emailext (
         subject: '${DEFAULT_SUBJECT}', //subject,
         mimeType: 'text/html',
-        body: '${DEFAULT_CONTENT}', //details,
+        body: details,                 //'${DEFAULT_CONTENT}'
         recipientProviders: [[$class: 'CulpritsRecipientProvider'],
                             [$class: 'DevelopersRecipientProvider'],
                             [$class: 'RequesterRecipientProvider']]
