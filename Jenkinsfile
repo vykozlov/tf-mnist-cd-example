@@ -20,9 +20,8 @@ node {
           //sh("mkdir ${tmpDirTest}")
           docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
           docker.image("${imageTagTest}").inside("-u 0"){
-              sh 'whoami'
               sh 'cd apps && ln -s tests/run_pylint.sh run_pylint.sh'
-              sh 'apps/run_pylint.sh >pylint.log'
+              sh 'apps/run_pylint.sh >pylint.log || exit 0'
               //echo "running container"
               sh 'cat pylint.log'
           }
