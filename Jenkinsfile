@@ -94,7 +94,7 @@ def notifyBuild(String buildStatus = 'STARTED') {
     def summary = "${subject} (${env.BUILD_URL})"
     def details = """<p>STARTED: Job '${env.JOB_NAME} - build # ${env.BUILD_NUMBER}' on $env.NODE_NAME.</p>
       <p>TERMINATED with: ${buildStatus}
-      <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} # ${env.BUILD_NUMBER}</a>"</p>"""
+      <p>Check console output at "<a href="${env.BUILD_URL}">${env.BUILD_URL}</a>"</p>"""
 
 
     emailext (
