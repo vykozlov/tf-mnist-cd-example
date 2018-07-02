@@ -89,15 +89,18 @@ def notifyBuild(String buildStatus = 'STARTED') {
     // build status of null means successful
     buildStatus =  buildStatus ?: 'SUCCESSFUL'
  
-    // Default values
+    // One can re-define default values
     def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
     def details = """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
       <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>"""
 
     emailext (
-        subject: subject,
-        body: details,
-        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        subject: '${DEFAULT_SUBJECT}', //subject,
+        mimeType: 'text/html',
+        body: '${DEFAULT_CONTENT}', //details,
+        recipientProviders: emailextrecipients([[$class: 'CulpritsRecipientProvider'],
+                                 [$class: 'DevelopersRecipientProvider'],
+                                 [$class: 'RequesterRecipientProvider']])
     )
 }
