@@ -16,7 +16,7 @@ node {
       stage('Build test image and run tests') {
           def imageTagTest = "${imageTagBase}-tests"
           sh("mkdir /tmp/${imageTagTest}")
-          docker.build("${imageTagTest}", "Dockerfile.tests")
+          docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
           docker.image("${imageTagTest}").inside() {
               sh("./run_pylint.sh")
           }
