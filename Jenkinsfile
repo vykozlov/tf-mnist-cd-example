@@ -22,7 +22,7 @@ node {
           echo "Here should be more tests for ${imageTagTest}"
 
           // delete test docker image from Jenkins site
-          sh("docker rmi ${imageTagTest}")
+          sh("docker rmi --force ${imageTagTest}")
       }
 
       stage('Build and Push (gpu)image to registry') {
