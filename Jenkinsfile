@@ -86,15 +86,14 @@ node {
 }
 
 def notifyBuild(String buildStatus = 'STARTED') {
-    // build status of null means successful
-    buildStatus =  buildStatus ?: 'SUCCESSFUL'
+    String buildStatus = currentBuild.result
   
     // One can re-define default values
     def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
-    def details = """<p>STARTED: Job '${env.PROJECT_NAME} - build [${env.BUILD_NUMBER}]' on $env.NODE_NAME.</p>
+    def details = """<p>STARTED: Job '${env.JOB_NAME} - build # ${env.BUILD_NUMBER}' on $env.NODE_NAME.</p>
       <p>TERMINATED with: ${buildStatus}
-      <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>"""
+      <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} #${env.BUILD_NUMBER}</a>"</p>"""
 
 
     emailext (
