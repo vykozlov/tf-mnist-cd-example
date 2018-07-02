@@ -17,12 +17,14 @@ node {
           def imageTagTest = "${imageTagBase}-tests"
           def tmpDirTest = "/tmp/${imageTagTest}"
           tmpDirTest = tmpDirTest.replaceAll(":","-")
-          sh("mkdir ${tmpDirTest}")
+          //sh("mkdir ${tmpDirTest}")
           docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
-          docker.image("${imageTagTest}").inside("-v $tmpDirTest:/tmp") {
-              sh '/home/apps/run_pylint.sh >/tmp/pylint.log'
+          docker.image("${imageTagTest}").inside{
+              whoami
+              cd apps && ln -s tests/run_pylint.sh run_pylint.sh
+              sh 'run_pylint.sh >pylint.log'
               //echo "running container"
-              //cat ${tmpDirTest}/pylint.log
+              cat pylint.log
           }
           
           //warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
