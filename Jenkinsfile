@@ -20,11 +20,11 @@ node {
           //sh("mkdir ${tmpDirTest}")
           docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
           docker.image("${imageTagTest}").inside{
-              whoami
-              ln -s apps/tests/run_pylint.sh apps/run_pylint.sh
+              sh 'whoami'
+              sh 'ln -s apps/tests/run_pylint.sh apps/run_pylint.sh'
               sh 'apps/run_pylint.sh >pylint.log'
               //echo "running container"
-              cat pylint.log
+              sh 'cat pylint.log'
           }
           
           //warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
