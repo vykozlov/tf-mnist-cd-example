@@ -99,8 +99,8 @@ def notifyBuild(String buildStatus = 'STARTED') {
         subject: '${DEFAULT_SUBJECT}', //subject,
         mimeType: 'text/html',
         body: '${DEFAULT_CONTENT}', //details,
-        recipientProviders: emailextrecipients([[$class: 'CulpritsRecipientProvider'],
-                                 [$class: 'DevelopersRecipientProvider'],
-                                 [$class: 'RequesterRecipientProvider']])
+        recipientProviders: [[$class: 'CulpritsRecipientProvider'],
+                            [$class: 'DevelopersRecipientProvider'],
+                            [$class: 'RequesterRecipientProvider']]
     )
 }
