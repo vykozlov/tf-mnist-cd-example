@@ -19,7 +19,7 @@ node {
           tmpDirTest = tmpDirTest.replaceAll(":","-")
           //sh("mkdir ${tmpDirTest}")
           docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
-          docker.image("${imageTagTest}").inside{
+          docker.image("${imageTagTest}").inside("-u 0"){
               sh 'whoami'
               sh 'ln -s apps/tests/run_pylint.sh apps/run_pylint.sh'
               sh 'apps/run_pylint.sh >pylint.log'
