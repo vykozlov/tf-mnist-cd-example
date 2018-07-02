@@ -14,11 +14,11 @@ node {
       }
 
       stage('Build test image and run tests') {
-          def imageTagTest = ${imageTagBase}-tests
+          def imageTagTest = "${imageTagBase}-tests"
           sh("docker build -f Dockerfile.tests -t ${imageTagTest} .")
           sh("docker run ${imageTagTest} ./run_pylint.sh > pylint.log")
           warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
-          echo "Here should be more tests.."
+          echo "Here should be more tests for ${imageTagTest}"
       }
 
       stage('Build and Push (gpu)image to registry') {
@@ -82,13 +82,12 @@ node {
     throw e
   } finally {
     // Success or failure, always send notifications
-    notifyBuild(currentBuild.result)
+    notifyBuild()
   }
 }
 
-def notifyBuild(String buildStatus = 'STARTED') {
-    // build status of null means successful
-    buildStatus =  buildStatus ?: 'SUCCESS'
+def notifyBuild() {
+    String buildStatus =  currentBuild.result
   
     // One can re-define default values
     def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
