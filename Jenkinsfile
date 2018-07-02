@@ -16,6 +16,7 @@ node {
       stage('Build test image and run tests') {
           def imageTagTest = "${imageTagBase}-tests"
           def tmpDirTest = "/tmp/${imageTagTest}"
+          tmpDirTest = tmpDirTest.replaceAll(":","-")
           sh("mkdir ${tmpDirTest}")
           docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
           docker.image("${imageTagTest}").withRun("-v $tmpDirTest:/tmp") {
