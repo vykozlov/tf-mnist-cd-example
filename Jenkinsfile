@@ -15,8 +15,12 @@ node {
 
       stage('Build test image and run tests') {
           def imageTagTest = "${imageTagBase}-tests"
-          sh("docker build -f Dockerfile.tests -t ${imageTagTest} .")
-          sh("docker run ${imageTagTest} ./run_pylint.sh")
+          sh("mkdir /tmp/${imageTagTest}")
+          docker.build("${imageTagTest}", "Dockerfile.tests")
+          docker.image("${imageTagTest}").inside() {
+              sh("./run_pylint.sh")
+          }
+          
           //warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
           echo "Here should be more tests for ${imageTagTest}"
       }
