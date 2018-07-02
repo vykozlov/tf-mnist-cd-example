@@ -86,7 +86,8 @@ node {
 }
 
 def notifyBuild(String buildStatus = 'STARTED') {
-    String buildStatus = currentBuild.result
+    // build status of null means successful
+    buildStatus =  buildStatus ?: 'SUCCESSFUL'
   
     // One can re-define default values
     def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
