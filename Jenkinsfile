@@ -2,7 +2,8 @@ node {
   def dockerhubuser = 'vykozlov'
   def appName = 'tf-mnist-cd'
   def mainVer = "1.0"
-  def imageTag = "${dockerhubuser}/${appName}:${env.BRANCH_NAME}-${mainVer}.${env.BUILD_NUMBER}-gpu"
+  def imageTagBase = "${appName}:${env.BRANCH_NAME}-${mainVer}.${env.BUILD_NUMBER}"
+  def imageTag = "${dockerhubuser}/${imageTagBase}-gpu"
   def k8sConfigMaster = "/home/jenkins/.kube/config.master"
   def jname = "jupyter-pass"
   def jpassfile = "./jpassword"  
@@ -12,17 +13,16 @@ node {
           checkout scm
       }
 
-      stage('Build image') {
-          sh("nvidia-docker build -t ${imageTag} .")
+      stage('Build test image and run tests') {
+          sh("docker build -f Dockerfile.tests -t ${imageTagBase}:tests .")
+          sh("docker run ${imageTagBase}:tests ./run_pylint.sh > pylint.log")
+          step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''])
+          echo "Here should be more tests.."
       }
 
-      stage('Run tests') {
-          //sh("nvidia-docker run ${imageTag} python tools/tf_vers.py")
-          echo "Here should be some tests.."
-      }
-
-      stage('Push image to registry') {
+      stage('Build and Push (gpu)image to registry') {
           echo "${imageTag}"
+          sh("nvidia-docker build -t ${imageTag} .")
           withCredentials([usernamePassword(credentialsId: 'dockerhub-vykozlov-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sh '''
               docker login -u ${USERNAME} -p ${PASSWORD}
