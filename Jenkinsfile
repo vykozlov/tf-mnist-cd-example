@@ -17,7 +17,7 @@ node {
           def imageTagTest = ${imageTagBase}-tests
           sh("docker build -f Dockerfile.tests -t ${imageTagTest} .")
           sh("docker run ${imageTagTest} ./run_pylint.sh > pylint.log")
-          step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''])
+          warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
           echo "Here should be more tests.."
       }
 
