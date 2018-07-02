@@ -17,11 +17,12 @@ node {
           def imageTagTest = "${imageTagBase}-tests"
           docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
           sh("docker run ${imageTagTest} ./run_pylint.sh >pylint.log || exit 0")
-              //echo "running container"
-          sh 'cat pylint.log'
-          
-          //warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
+          //sh 'cat pylint.log'        
+          warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
           echo "Here should be more tests for ${imageTagTest}"
+
+          // delete test docker image from Jenkins site
+          sh("docker rmi ${imageTagTest}")
       }
 
       stage('Build and Push (gpu)image to registry') {
