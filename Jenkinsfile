@@ -16,8 +16,7 @@ node {
       stage('Build test image and run tests') {
           def imageTagTest = "${imageTagBase}-tests"
           docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
-          sh("docker run ${imageTagTest} ./run_pylint.sh >pylint.log || exit 0")
-          //sh 'cat pylint.log'        
+          sh("docker run ${imageTagTest} ./run_pylint.sh >pylint.log || exit 0")        
           //warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
           step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''])
           echo "Here should be more tests for ${imageTagTest}"
@@ -98,7 +97,7 @@ def notifyBuild() {
     def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
     def details = """<p>STARTED: Job '${env.JOB_NAME} - build # ${env.BUILD_NUMBER}' on $env.NODE_NAME.</p>
-      <p>TERMINATED with: ${buildStatus}
+      <p>TERMINATED with: ${buildStatus} ${env.BUILD_STATUS}
       <p>Check console output at "<a href="${env.BUILD_URL}">${env.BUILD_URL}</a>"</p>"""
 
 
@@ -106,6 +105,9 @@ def notifyBuild() {
         subject: '${DEFAULT_SUBJECT}', //subject,
         mimeType: 'text/html',
         body: details,                 //'${DEFAULT_CONTENT}'
+        attachmentsPattern: **/pyling.log,
+        attachLog: true,
+        compressLog: true,
         recipientProviders: [[$class: 'CulpritsRecipientProvider'],
                             [$class: 'DevelopersRecipientProvider'],
                             [$class: 'RequesterRecipientProvider']]
