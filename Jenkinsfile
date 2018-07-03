@@ -4,6 +4,7 @@ node {
   def mainVer = "1.0"
   def imageTagBase = "${appName}:${env.BRANCH_NAME}-${mainVer}.${env.BUILD_NUMBER}"
   def imageTag = "${dockerhubuser}/${imageTagBase}-gpu"
+  def pylintLog = "pyling.log"
   def k8sConfigMaster = "/home/jenkins/.kube/config.master"
   def jname = "jupyter-pass"
   def jpassfile = "./jpassword"  
@@ -16,9 +17,9 @@ node {
       stage('Build test image and run tests') {
           def imageTagTest = "${imageTagBase}-tests"
           docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
-          sh("docker run ${imageTagTest} ./run_pylint.sh >pylint.log || exit 0")        
-          //warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
-          step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''])
+          sh("docker run ${imageTagTest} ./run_pylint.sh >${pylintLog} || exit 0")        
+          warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/${pylintLog}']], unHealthy: ''
+          //step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''])
           echo "Here should be more tests for ${imageTagTest}"
 
           // delete test docker image from Jenkins site
@@ -105,7 +106,7 @@ def notifyBuild() {
         subject: '${DEFAULT_SUBJECT}', //subject,
         mimeType: 'text/html',
         body: details,                 //'${DEFAULT_CONTENT}'
-        attachmentsPattern: **/pyling.log,
+        attachmentsPattern: */${pylintLog},
         attachLog: true,
         compressLog: true,
         recipientProviders: [[$class: 'CulpritsRecipientProvider'],
