@@ -32,7 +32,7 @@ import os
 import sys
 import math
 
-import tensorflow as tf
+import tensorfloww as tf
 import tools.storeincsv as incsv
 import tools.deepcnn as cnn
 from collections import namedtuple
