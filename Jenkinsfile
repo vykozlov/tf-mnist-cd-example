@@ -4,7 +4,7 @@ node {
   def mainVer = "1.0"
   def imageTagBase = "${appName}:${env.BRANCH_NAME}-${mainVer}.${env.BUILD_NUMBER}"
   def imageTag = "${dockerhubuser}/${imageTagBase}-gpu"
-  def pylintLog = "pyling.log"
+  //def pylintLog = "pylint.log"
   def k8sConfigMaster = "/home/jenkins/.kube/config.master"
   def jname = "jupyter-pass"
   def jpassfile = "./jpassword"  
@@ -17,9 +17,8 @@ node {
       stage('Build test image and run tests') {
           def imageTagTest = "${imageTagBase}-tests"
           docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
-          sh("docker run ${imageTagTest} ./run_pylint.sh >${pylintLog} || exit 0")        
-          warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/${pylintLog}']], unHealthy: ''
-          //step([$class: 'WarningsPublisher', canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''])
+          sh("docker run ${imageTagTest} ./run_pylint.sh >pylint.log || exit 0")        
+          warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
           echo "Here should be more tests for ${imageTagTest}"
 
           // delete test docker image from Jenkins site
@@ -93,6 +92,8 @@ node {
 
 def notifyBuild() {
     String buildStatus =  currentBuild.result
+    // build status of null means successful
+    buildStatus =  buildStatus ?: 'SUCCESS'
   
     // One can re-define default values
     def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
@@ -106,9 +107,9 @@ def notifyBuild() {
         subject: '${DEFAULT_SUBJECT}', //subject,
         mimeType: 'text/html',
         body: details,                 //'${DEFAULT_CONTENT}'
-        attachmentsPattern: '**/${pylintLog}',
         attachLog: true,
         compressLog: true,
+        attachmentsPattern: '**/pylint.log',
         recipientProviders: [[$class: 'CulpritsRecipientProvider'],
                             [$class: 'DevelopersRecipientProvider'],
                             [$class: 'RequesterRecipientProvider']]
