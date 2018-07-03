@@ -1,3 +1,8 @@
+"""
+Helper function to store data in CSV format
+@author: valentin
+"""
+
 import csv
 
 def store_data_in_csv(csv_file, param_entries):
