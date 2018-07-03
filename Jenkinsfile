@@ -106,7 +106,7 @@ def notifyBuild() {
         subject: '${DEFAULT_SUBJECT}', //subject,
         mimeType: 'text/html',
         body: details,                 //'${DEFAULT_CONTENT}'
-        attachmentsPattern: */${pylintLog},
+        attachmentsPattern: '**/${pylintLog}',
         attachLog: true,
         compressLog: true,
         recipientProviders: [[$class: 'CulpritsRecipientProvider'],
