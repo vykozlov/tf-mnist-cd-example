@@ -32,12 +32,13 @@ import os
 import sys
 import math
 
-import tensorflow as tf
-import tools.storeincsv as incsv
-import tools.deepcnn as cnn
 from collections import namedtuple
 from datetime import datetime
+
+import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
+import tools.storeincsv as incsv
+import tools.deepcnn as cnn
 
 
 FLAGS = None
@@ -48,6 +49,7 @@ ParamHeader = ['Timestamp', 'Script', 'Info', 'Batch_size', 'Num_steps',
 ParamEntry = namedtuple('ParamEntry', ParamHeader)
 
 def main(_):
+    """ Main function to initialize and run neural network """
     # Import data
     mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
 
