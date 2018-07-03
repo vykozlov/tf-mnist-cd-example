@@ -99,7 +99,7 @@ def notifyBuild() {
     def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
     def details = """<p>STARTED: Job '${env.JOB_NAME} - build # ${env.BUILD_NUMBER}' on $env.NODE_NAME.</p>
-      <p>TERMINATED with: ${buildStatus} ${env.BUILD_STATUS}
+      <p>TERMINATED with: ${buildStatus}
       <p>Check console output at "<a href="${env.BUILD_URL}">${env.BUILD_URL}</a>"</p>"""
 
 

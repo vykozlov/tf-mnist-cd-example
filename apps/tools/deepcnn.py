@@ -11,7 +11,7 @@ import tensorflow as tf
 import tools.nnet_funcs as nnfunc
 
 def deepcnn(x):
-    """deepnn builds the graph for a deep net for classifying digits.
+    """deepcnn builds the graph for a deep net for classifying digits.
 
     Args:
       x: an input tensor with the dimensions (N_examples, 784), where 784 is the
