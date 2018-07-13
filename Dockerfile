@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git wget && \
 # python
     pip --no-cache-dir install \
         keras \
+        jupyterlab \
         && \
     python -m ipykernel.kernelspec && \
     rm -rf /root/.cache/pip/* && \
@@ -18,6 +19,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends git wget && \
 
 # Set the working directory to /home/apps
 WORKDIR /home/apps
+
+# For Jupyter terminal
+ENV SHELL /bin/bash
 
 # Copy the current directory contents into the container at /home
 ADD . /home
