@@ -31,7 +31,7 @@ spec:
           limits:
             nvidia.com/gpu: 1 # requesting N GPUs
         #command: ["python","mnist_deep.py","--mnist_steps=5000"]
-        command: ["./run_jupyter.sh", "--allow-root"]
+        command: ["./jupyter/run_jupyter.sh", "--allow-root"]
       volumes:
       - name: mnist-data
         hostPath:

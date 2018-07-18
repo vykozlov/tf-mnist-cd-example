@@ -12,19 +12,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends git wget && \
     pip --no-cache-dir install \
         keras \
         jupyterlab \
+        pylint \
         && \
     python -m ipykernel.kernelspec && \
     rm -rf /root/.cache/pip/* && \
     rm -rf /tmp/*
 
+# For Jupyter terminal
+ENV SHELL /bin/bash
+
 # Set the working directory to /home/apps
 WORKDIR /home/apps
 
-# For Jupyter terminal
-ENV SHELL /bin/bash
+# Set up our notebook config.
+COPY apps/jupyter/jupyter_notebook_config.py /root/.jupyter/
+COPY apps/jupyter/run_jupyter.sh /
+
+# REMINDER: Tensorflow Docker Images EXPOSEs 6006 and 8888 ports
 
 # Copy the current directory contents into the container at /home
 ADD . /home
 
-# Run mnist_deep.py when the container launches. BETTER TO AVOID THIS!
-#CMD ["python", "mnist_deep.py"]
