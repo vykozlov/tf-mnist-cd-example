@@ -25,11 +25,10 @@ ENV SHELL /bin/bash
 WORKDIR /home/apps
 
 # Set up our notebook config.
-COPY apps/jupyter/jupyter_notebook_config.py /root/.jupyter/
-COPY apps/jupyter/run_jupyter.sh /
+COPY jupyter/jupyter_notebook_config.py /root/.jupyter/
+COPY jupyter/run_jupyter.sh /
 
 # REMINDER: Tensorflow Docker Images EXPOSEs 6006 and 8888 ports
 
 # Copy the current directory contents into the container at /home
 ADD . /home
-

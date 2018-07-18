@@ -21,17 +21,21 @@ spec:
           valueFrom: 
             secretKeyRef:
               name: jupyter-pass
-              key: jpassword        
+              key: jpassword
+        - name: JupyterCONF
+          value: /home/jupyter-secure
         volumeMounts:
         - mountPath: /tmp/mnist-data
           name: mnist-data
         - mountPath: /home/apps/src
           name: src-dir
+        - mountPath: /home/jupyter-secure
+          name: jupyter-secure
         resources:
           limits:
             nvidia.com/gpu: 1 # requesting N GPUs
         #command: ["python","mnist_deep.py","--mnist_steps=5000"]
-        command: ["./jupyter/run_jupyter.sh", "--allow-root"]
+        command: ["/run_jupyter.sh", "--allow-root"]
       volumes:
       - name: mnist-data
         hostPath:
@@ -40,4 +44,8 @@ spec:
       - name: src-dir
         hostPath:
           path: /home/eo9869/workspace/src
+          type: Directory
+      - name: jupyter-secure
+        hostPath:
+          path: /home/eo9869/jupyter-secure
           type: Directory
