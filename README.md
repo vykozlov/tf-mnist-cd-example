@@ -1,12 +1,13 @@
 tf-mnist-cd-example
 ==============================
 
-MNIST Tensorflow Example + Jenkinsfile. Structured according to template
+MNIST Tensorflow Example + Docker + Jenkinsfile. Structured according to template
 
 Project Organization
 ------------
 
     ├── LICENSE
+    ├── Jenkinsfile        <- Describes multibranch pipeline (very preliminary)    
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
     ├── README.md          <- The top-level README for developers using this project.
     ├── data
@@ -15,8 +16,23 @@ Project Organization
     │   ├── processed      <- The final, canonical data sets for modeling.
     │   └── raw            <- The original, immutable data dump.
     │
+    ├── docker             <- Directory for docker files:
+    │   ├── Dockerfile        to build docker image (based on Tensorflow GPU version)
+    │   ├── Dockerfile.cpu    CPU version
+    │   ├── Dockerfile.tests  for testing of the code in Jenkins pipeline
+    │   ├── jupyter        <- Directory with jupyter_notebook_config.py + run_jupyter.sh
+    │   │   └── jupyter_notebook_config.py
+    │   │                     basic jupyter configuration. If PASSWORD env is set, this PASSWORD is used to login to jupyter     │   │   └── run_jupyter.sh  
+    │                        * according to Tensorflow people, Jupyter has issues with being run directly:
+    │                          https://github.com/ipython/ipython/issues/7062 , this is a little wrapper script.
+    │                        * added JupyterCONF environment in order to mount and use 'external' jupyter config, 
+    │                          e.g. private key, certificate, user-defined jupyter_config file.    
+    │
     ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
     │
+    │    
+    ├── k8s                <- Configuration files for kubernetes (sets environments, mount paths)
+    │    
     ├── models             <- Trained and serialized models, model predictions, or model summaries
     │
     ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
@@ -55,31 +71,3 @@ Project Organization
 --------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
-
-# (From OLD README):
-# tf-mnist-cd-example
-Example on MNIST Tensorflow script + Docker + k8s + Jenkins
-
-Structure:
-
-apps    - directory containing Tensorflow application + misc tools.
-
-jenkins - for now obsolete
-
-jupyter - copy of Tensorflow jupyter_notebook_config.py + run_jupyter.sh
-
-  * jupyter_notebook_config.py :
-    * basic jupyter configuration. If PASSWORD env is set, this PASSWORD is used to login to jupyter.
-          
-  * run_jupyter.sh :
-    * according to Tensorflow people, Jupyter has issues with being run directly: https://github.com/ipython/ipython/issues/7062 , this is a little wrapper script.
-    * added JupyterCONF environment in order to mount and use 'external' jupyter config, e.g. private key, certificate, user-defined jupyter_config file.
-                         
-k8s     - configuration files for kubernetes (sets environments, mount paths)
-
-Dockerfile - to build docker image
-
-Dockerfile.test - for testing of the code in Jenkins pipeline
-
-Jenkinsfile - describes multibranch pipeline (very preliminary) 
-                         
