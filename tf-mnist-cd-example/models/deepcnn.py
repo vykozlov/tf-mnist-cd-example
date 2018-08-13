@@ -8,7 +8,7 @@ Created on Mon Jul  2 15:43:01 2018
 """
 
 import tensorflow as tf
-import tools.nnet_funcs as nnfunc
+import models.nnet_funcs as nnfunc
 
 def deepcnn(x):
     """deepcnn builds the graph for a deep net for classifying digits.

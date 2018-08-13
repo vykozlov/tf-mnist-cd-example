@@ -37,8 +37,8 @@ from datetime import datetime
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-import tools.storeincsv as incsv
-import tools.deepcnn as cnn
+import data.storeincsv as incsv
+import models.deepcnn as cnn
 
 
 FLAGS = None
