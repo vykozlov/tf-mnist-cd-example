@@ -19,10 +19,11 @@ RUN apt-get update && \
     rm -rf /tmp/*
 
 # Set the working directory
-WORKDIR /home/tf-mnist-cd-example
+WORKDIR /home
 
 # Script to run pylint
-COPY ../tf-mnist-cd-example/tests/run_pylint.sh /home/tf-mnist-cd-example
+COPY tf-mnist-cd-example/tests/run_pylint.sh /home/tf-mnist-cd-example
 
 # Copy the current directory contents into the container at /home
-ADD ../ /home
+ADD . /home
+RUN ln -s /home/tf-mnist-cd-example /home/app

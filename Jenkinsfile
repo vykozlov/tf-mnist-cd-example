@@ -16,7 +16,7 @@ node {
 
       stage('Build test image and run tests') {
           def imageTagTest = "${imageTagBase}-tests"
-          docker.build("${imageTagTest}", "-f Dockerfile.tests ./")
+          docker.build("${imageTagTest}", "-f docker/Dockerfile.tests ./")
           sh("docker run ${imageTagTest} ./run_pylint.sh >pylint.log || exit 0")        
           warnings canComputeNew: false, canResolveRelativePaths: false, categoriesPattern: '', defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', messagesPattern: '', parserConfigurations: [[parserName: 'PyLint', pattern: '**/pylint.log']], unHealthy: ''
           //re-run pylint with Refactor and Convention Off, to catch Warnings and Errors and stop in case of them. Comment out for now...
@@ -29,7 +29,7 @@ node {
 
       stage('Build and Push (gpu)image to registry') {
           echo "${imageTag}"
-          sh("nvidia-docker build -t ${imageTag} .")
+          sh("nvidia-docker build -t ${imageTag} -f docker/Dockerfile .")
           withCredentials([usernamePassword(credentialsId: 'dockerhub-vykozlov-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sh '''
               docker login -u ${USERNAME} -p ${PASSWORD}

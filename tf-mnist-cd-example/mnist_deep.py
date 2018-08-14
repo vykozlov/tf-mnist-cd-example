@@ -181,7 +181,8 @@ def main(_):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir', type=str,
-                        default='/tmp/tensorflow/mnist/input_data',
+                        default='../data/raw',
+                        #default='/tmp/tensorflow/mnist/input_data',
                         help='Directory for storing input data')
     parser.add_argument("--mnist_batch", type=int, default=-1,
                         help="Batch size")

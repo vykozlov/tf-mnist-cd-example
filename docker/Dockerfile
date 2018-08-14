@@ -21,14 +21,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends git wget && \
 # For Jupyter terminal
 ENV SHELL /bin/bash
 
-# Set the working directory to /home/apps
-WORKDIR /home/tf-mnist-cd-example
+# Set the working directory to /home/tf-mnist-cd-example
+WORKDIR /home
 
 # Set up our notebook config.
-COPY jupyter/jupyter_notebook_config.py /root/.jupyter/
-COPY jupyter/run_jupyter.sh /
+COPY docker/jupyter/jupyter_notebook_config.py /root/.jupyter/
+COPY docker/jupyter/run_jupyter.sh /
 
 # REMINDER: Tensorflow Docker Images EXPOSEs 6006 and 8888 ports
 
 # Copy the current directory contents into the container at /home
-ADD ../ /home
+ADD . /home
+RUN ln -s /home/tf-mnist-cd-example /home/app
