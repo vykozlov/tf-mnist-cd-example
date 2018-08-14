@@ -32,5 +32,5 @@ COPY docker/jupyter/run_jupyter.sh /
 
 # Copy the current directory contents into the container at /home
 ADD . /home
-#RUN ln -s /home/tf-mnist-cd-example /home/app
-RUN mv /home/tf-mnist-cd-example /home/app
+RUN ln -s /home/tf-mnist-cd-example /home/app
+#RUN mv /home/tf-mnist-cd-example /home/app
