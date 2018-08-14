@@ -27,8 +27,8 @@ spec:
         volumeMounts:
         - mountPath: /tmp/mnist-data
           name: mnist-data
-        - mountPath: /home/apps/src
-          name: src-dir
+        - mountPath: /home/mnt
+          name: mnt-dir
         - mountPath: /home/jupyter-secure
           name: jupyter-secure
         resources:
@@ -41,9 +41,9 @@ spec:
         hostPath:
           path: /home/eo9869/datasets/mnist-data
           type: Directory
-      - name: src-dir
+      - name: mnt-dir
         hostPath:
-          path: /home/eo9869/workspace/src
+          path: /home/eo9869/workspace/mnt
           type: Directory
       - name: jupyter-secure
         hostPath:
